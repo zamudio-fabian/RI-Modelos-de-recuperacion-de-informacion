@@ -2,13 +2,19 @@
 @author - Zamudio Fabian (2018)
 Repositorio de Recuperación de Información
 
+### Ejemplo de uso
+```
+./terrier-4.0/bin/trec_setup.sh PATH/TO/CORPUS
+
+./terrier-4.0/bin/trec_terrier.sh -i -Dtrec.collection.class=SimpleFileCollection
+
+./terrier-4.0/bin/trec_terrier.sh -r -Dtrec.model=BM25 -Dignore.low.idf.terms=false -Dtrec.topics=PATH/TO/QUERY
+
+./terrier-4.0/bin/trec_terrier.sh -r -Dtrec.model=TF_IDF -Dignore.low.idf.terms=false -Dtrec.topics=PATH/TO/QUERY
+```
+
+
 ### Ejercicio
-Utilizando la colección provista por el equipo docente1, cuya estructura es la siguiente:
-
-- vocabulary.txt → [id_termino, idf, término]
-- documentVectors.txt → [id_doc, lista(id_terminos)]
-- queries.txt → [id_query, lista(id_terminos)]
-- relevants.txt → [id_query, listarelevantes (id_doc)]
-- informationNeeds.txt → [id_in, texto_libre]
-
-calcule los conjuntos de respuestas usando el modelo booleano y el modelo vectorial (asuma en todos los casos TF = 1) y compare los resultados contra los relevantes. Trate de explicar las diferencias. A continuación, usando las necesidades de información reescriba los 5 queries y repita la operación. Indique si pudo mejorar la eficiencia a partir de las nuevas consultas.
+Utilizando Terrier indexe la colección provista por el equipo docente. Tome 5 necesidades de información y – de forma manual – derive una consulta (query). Para cada una, pruebe la recuperación por los modelos basados en TF_IDF y BM25. 
+- ¿Cómo se comportan los rankings?
+- Calcule el coeficiente de correlación para los primeros 10, 25 y 50 resultados. ¿Qué conclusiones obtiene?
