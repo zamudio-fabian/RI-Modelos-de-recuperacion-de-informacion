@@ -1,5 +1,5 @@
 # RI-Modelos-de-recuperacion-de-informacion
-@author - Zamudio Fabian (2017)
+@author - Zamudio Fabian (2018)
 Repositorio de Recuperación de Información
 
 ### Ejercicio
