@@ -4,20 +4,23 @@ import codecs
 def start():
     maxCantQueries = 5
     max_puestos = 50
+    # Hitos para calcular las correlaciones de los rankings
     hitos = [10, 25, 50]
     correlaciones = []
 
+    # Obtenemos los rankings y normalizamos ambos
     rankingTfIdf = getRankings("TF_IDF_1.res", maxCantQueries, max_puestos)
     rankingBm25 = getRankings("BM25b0.75_0.res", maxCantQueries, max_puestos)
     # Por cada hito recorremos los ranking y por cada query obtenemos la correlación para ese HITO
     for x in xrange(maxCantQueries):
         correlacionesSub = []
         for hito in hitos:
-            resp = correlacionesAt(rankingTfIdf[x], rankingBm25[x], hito)
+            resp = correlacionAt(rankingTfIdf[x], rankingBm25[x], hito)
             resp.append(x+1)
             correlacionesSub.append(list(resp))
         correlaciones.append(list(correlacionesSub))
     
+    # Almacenamos las correlaciones
     with codecs.open("correlaciones.txt", mode="w", encoding="utf-8") as archivo:
         for queryNro,resp in enumerate(correlaciones):
             archivo.write("QUERY NRO "+str(queryNro+1)+"\n")
@@ -33,26 +36,30 @@ def start():
                     archivo.write(str(rank + 1).ljust(8) + resp[indexHito][0][rank].ljust(8)  + resp[indexHito][1][rank].ljust(8) + "\n")
                 archivo.write("\n\n")
 
-# Metodo para obtner la correlación de un hito en particular entre dos ranking.
+# Metodo para obtener la correlación de un hito en particular entre dos ranking.
 # Hay que normalizar los ranking
-def correlacionesAt(rankingA,rankingB,hito):
-    # Normalizamos
+def correlacionAt(rankingA,rankingB,hito):
+    # Obtenemos los X elementos dados por el hito
     rankingAAux = rankingA[:hito]
     rankingBAux = rankingB[:hito]
+    # En el caso de que un Doc este en un ranking pero no en el otro hay que agregarlo
     for idDoc in rankingAAux:
         if idDoc not in rankingBAux:
             rankingBAux.append(idDoc)
     for idDoc in rankingBAux:
         if idDoc not in rankingAAux:
             rankingAAux.append(idDoc)
-    total = 0
     # Por cada idDoc sumo al total la distancia elevada al cuadrado
+    diferencias = 0
     for documento in rankingAAux:
         indexRankingA = rankingAAux.index(documento) + 1
         indexRankingB = rankingBAux.index(documento) + 1
-        total += pow(indexRankingA - indexRankingB, 2)
-    divisor = float(len(rankingAAux) * (pow(len(rankingAAux), 2) - 1))
-    correlacion = (1 - ((6 * total) / float(divisor)))
+        diferencias += pow(indexRankingA - indexRankingB, 2)
+    # Sacamos la correlación mediante el Coeficiente de Correlación de Spearman
+    # https://es.wikipedia.org/wiki/Coeficiente_de_correlaci%C3%B3n_de_Spearman
+    cantidadElementos = len(rankingAAux)
+    divisor = float( cantidadElementos * (pow(cantidadElementos, 2) - 1))
+    correlacion = (1 - ((6 * diferencias) / float(divisor)))
     return  [rankingAAux,rankingBAux,correlacion]
 
 # Genera la lista de ranking
