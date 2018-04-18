@@ -15,6 +15,4 @@ Repositorio de Recuperación de Información
 
 
 ### Ejercicio
-Utilizando Terrier indexe la colección provista por el equipo docente. Tome 5 necesidades de información y – de forma manual – derive una consulta (query). Para cada una, pruebe la recuperación por los modelos basados en TF_IDF y BM25. 
-- ¿Cómo se comportan los rankings?
-- Calcule el coeficiente de correlación para los primeros 10, 25 y 50 resultados. ¿Qué conclusiones obtiene?
+Escriba un pequeño programa que lea un directorio con documentos de texto y arme una estructura de datos en memoria para soportar la recuperación. Luego, debe permitir ingresar un query y devolver un ranking de los documentos relevantes utilizando el modelo vectorial. Se debe soportar la ponderación de los términos de la consulta. Implemente las versiones sugeridas en [MIR].
