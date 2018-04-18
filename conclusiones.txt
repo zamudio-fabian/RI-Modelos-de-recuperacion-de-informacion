@@ -1,0 +1,2 @@
+Comparando los ranking generados en el punto 5 y el 6 se observan diferencias muy marcadas, por otro lado ambos ranking presentan documentos relevantes que responden a los queries respectivas.
+Estas diferencias se entienden a causa de los diferentes métodos , ponderaciones y restricciones que se hacen en cada sistema, para despejar dudas de si el comportamiento de nuestro sistema funciona de forma aceptable se podría ejecutar consultas con un corpus, queries y juicios de relevancias preparado para pruebas como el conjunto de prueba usado en el punto 9.
