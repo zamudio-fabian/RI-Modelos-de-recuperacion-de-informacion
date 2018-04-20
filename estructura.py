@@ -42,8 +42,6 @@ def translate(to_translate):
 
 def tokenizar(line):
 	global stemmer
-
-	#return [word.lower() for word in line.split()]
 	return [word for word in line.split() if ((len(word) >= MIN_LENGTH) and (len(word) <= MAX_LENGTH))]
 
 def sacar_palabras_vacias(lista_tokens, lista_vacias):
@@ -59,9 +57,7 @@ def leer_palabras_vacias(file):
 
 def extraer_terminos(tokens):
 	global stemmer
-
 	return [stemmer.stem(termino.lower()) for termino in tokens if (not htmlentity(termino)) ]
-	#return [termino for termino in tokens if ((len(termino) >= MIN_LENGTH) and (len(termino) <= MAX_LENGTH) and (not htmlentity(termino))) ]
 
 def filtrar_documento(documento):
 	documento = re.sub("<\!\-([^\-]|[\r\n]|(\-+([^\->]|[\r\n])))*\-+>", '', documento)
