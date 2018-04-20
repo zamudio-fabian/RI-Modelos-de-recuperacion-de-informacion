@@ -3,10 +3,5 @@
 Repositorio de Recuperación de Información
 
 ### Ejercicio
- A continuación se prentan las salidas de tres sistemas de recuperación de información para 3 consultas cualquiera y los juicios de relevancia creados por asesores humanos.
- 
-Para cada sistema calcule:
-– La precisión media
-– La precisión media a intervalos de Recall de 20%.
-– P@5, P@10, P@20
-Exponga un escenario posible y medidas complementarias para decidir qué sistema utilizar.
+ Utilizando la colección de prueba CISI (http://ir.dcs.gla.ac.uk/resources/test_collections/cisi/) y Terrier se debe realizar la evaluación del sistema.
+Para ello, es necesario construir un índice con los documentos de la colección y luego ejecutar las consultas, las cuales se deben armar a partir de los términos que considere de las necesidades de información. Los resultados deben ser comparados contra los juicios de relevancia de la colección utilizando el software trec_eval. Realizar el análisis y escribir un reporte indicando los resultados obtenidos, junto con la gráfica de R–P en los 11 puntos standard. Realice dos experimentos: en el primero, no considere la frecuencia de los términos en el query mientras que en el segundo lo debe tener en cuenta.
