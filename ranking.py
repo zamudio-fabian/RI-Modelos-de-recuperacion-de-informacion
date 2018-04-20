@@ -112,7 +112,7 @@ def calcular_normas(terminos_archivos, terminos):
 def calcular_idf(terminos_archivos, terminos, termino):
 	return math.log(float(len(terminos_archivos))/terminos[termino]['df'], 2)
 
-def recuperar_archivos(terminos, query, terminos_archivos):
+def recuperar_archivos_opt_a(terminos, query, terminos_archivos):
 	ret = {}
 	for archivo in terminos_archivos:
 		numerador = 0
@@ -141,11 +141,86 @@ def recuperar_archivos(terminos, query, terminos_archivos):
 		ret[archivo] = numerador/denominador if denominador != 0 else 0
 	return ret
 
+def recuperar_archivos_opt_b(terminos, query, terminos_archivos):
+	ret = {}
+	for archivo in terminos_archivos:
+		numerador = 0
+		denominador = 0
+		for termino in query:
+			if(not termino in terminos):
+				continue
+			if(len(terminos_archivos[archivo]['terminos']) == 0):
+				continue
+
+			qtf = float(query.get(termino, 0)*0.5)
+			qtf /= max(query.values())
+			qtf += 0.5
+
+			dtf = float(terminos_archivos[archivo]['terminos'].get(termino, 0))
+			dtf /= max(terminos_archivos[archivo]['terminos'].values())
+
+			idf = 1
+			dtfidf = dtf*idf
+			qtfidf = math.log(1 + float(len(terminos_archivos))/terminos[termino]['df'],2) * idf
+
+			numerador += qtfidf * dtfidf
+			denominador += qtfidf**2
+
+		denominador = math.sqrt(denominador) * terminos_archivos[archivo]['norma']
+		ret[archivo] = numerador/denominador if denominador != 0 else 0
+	return ret
+
+def recuperar_archivos_opt_c(terminos, query, terminos_archivos):
+	ret = {}
+	for archivo in terminos_archivos:
+		numerador = 0
+		denominador = 0
+		for termino in query:
+			if(not termino in terminos):
+				continue
+			if(len(terminos_archivos[archivo]['terminos']) == 0):
+				continue
+
+			qtf = float(query.get(termino, 0)*0.5)
+			qtf /= max(query.values())
+			qtf += 0.5
+
+			dtf = float(terminos_archivos[archivo]['terminos'].get(termino, 0))
+			dtf /= max(terminos_archivos[archivo]['terminos'].values())
+
+			idf = calcular_idf(terminos_archivos, terminos, termino)
+			dtfidf = dtf*idf
+			qtfidf = math.log(1 + query.get(termino, 0),2) * idf
+
+			numerador += qtfidf * dtfidf
+			denominador += qtfidf**2
+
+		denominador = math.sqrt(denominador) * terminos_archivos[archivo]['norma']
+		ret[archivo] = numerador/denominador if denominador != 0 else 0
+	return ret
+
 if __name__ == "__main__":
 	directory = sys.argv[1]
 	vacias = []
-	if(len(sys.argv) > 2):
-		vacias = leer_palabras_vacias(sys.argv[2])
+	typeTFIDF = 'A'
+	if "-h" in sys.argv:
+		print "MODO DE USO: python ranking.py <PATH/TO/CORPUS> [-v <PATH/TO/PALABRAS/VACIAS>] [-t <A|B|C>]"
+		sys.exit(0)
+	if len(sys.argv) < 2:
+		print "ERROR: Debe ingresar el directorio con los archivos a analizar"
+		sys.exit(1)
+	if "-v" in sys.argv:
+		if sys.argv.index("-v") + 1 == len(sys.argv):
+			print "ERROR: Debe ingresar el nombre del archivo con palabras vacias"
+			sys.exit(1)
+		else:
+			vacias = leer_palabras_vacias(sys.argv[sys.argv.index("-v") + 1])
+	if "-t" in sys.argv:
+		if sys.argv.index("-t") + 1 == len(sys.argv):
+			print "ERROR: Debe ingresar el tipo de ponderación que desea utilizar en la query"
+			sys.exit(1)
+		else:
+			typeTFIDF = sys.argv[sys.argv.index("-t") + 1]
 
 	global stemmer
 
@@ -169,7 +244,12 @@ if __name__ == "__main__":
 	while (query != ''):
 		tokens_query = tokenizar(translate(filtrar_documento(query)))
 		terminos_query = calcular_tfs(extraer_terminos(sacar_palabras_vacias(tokens_query, vacias)))
-		ret = recuperar_archivos(terminos, terminos_query, terminos_archivos)
+		if (typeTFIDF == 'C') :
+			ret = recuperar_archivos_opt_c(terminos, terminos_query, terminos_archivos)
+		elif (typeTFIDF == 'B') :
+			ret = recuperar_archivos_opt_b(terminos, terminos_query, terminos_archivos)
+		else :
+			ret = recuperar_archivos_opt_a(terminos, terminos_query, terminos_archivos)
 		ranking = sorted(ret.items(), key=lambda x: x[1], reverse=True)
 		
 		for r in xrange(0, min(15, len(ranking))):
