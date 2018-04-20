@@ -4,13 +4,7 @@ Repositorio de Recuperación de Información
 
 ### Ejemplo de uso
 ```
-./terrier-4.0/bin/trec_setup.sh PATH/TO/CORPUS
-
-./terrier-4.0/bin/trec_terrier.sh -i -Dtrec.collection.class=SimpleFileCollection
-
-./terrier-4.0/bin/trec_terrier.sh -r -Dtrec.model=BM25 -Dignore.low.idf.terms=false -Dtrec.topics=PATH/TO/QUERY
-
-./terrier-4.0/bin/trec_terrier.sh -r -Dtrec.model=TF_IDF -Dignore.low.idf.terms=false -Dtrec.topics=PATH/TO/QUERY
+correlacion.py -c <path_directorio_archivos> -q <path_archivo_queries>]
 ```
 
 

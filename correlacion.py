@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import codecs
+import subprocess
+import sys
 
 def start():
     maxCantQueries = 5
@@ -84,6 +86,26 @@ def getRankings(ranking_file, maxCantQueries, max_puestos):
     return rankings
 
 if __name__ == "__main__":
+    if "-h" in sys.argv:
+        print "MODO DE USO: correlacion.py -c <path_directorio_archivos> -q <path_archivo_queries>]"
+        sys.exit(0)
+    if len(sys.argv) < 5:
+        print "ERROR: Debe ingresar el directorio con los archivos a analizar y el archivo con las queries. Use -h para más información"
+        sys.exit(1)
+    if "-c" in sys.argv:
+        if sys.argv.index("-c") + 1 == len(sys.argv):
+            print "ERROR: Debe ingresar el nombre del archivo con palabras vacias"
+            sys.exit(1)
+        else:
+            path_corpus = sys.argv[sys.argv.index("-c") + 1]
+    if "-q" in sys.argv:
+        if sys.argv.index("-q") + 1 == len(sys.argv):
+            print "ERROR: Debe ingresar el path del archivo con las consultas"
+            sys.exit(1)
+        else:
+            file_queries = sys.argv[sys.argv.index("-q") + 1]
+
+    subprocess.call("preprocesador.sh "+path_corpus+" "+file_queries, shell=True)
     start()
 
 
