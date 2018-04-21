@@ -80,7 +80,7 @@ def start(path_cisi, path_stopwords):
     path_relevantes = path_cisi+"/CISI.REL"
     path_corpus_trec = "documentos.trec"
     path_queries_trec = "queries.txt"
-    path_queries_con_duplicados_trec = "queries_con_duplicados.txt"
+    path_queries_con_TF_trec = "queries_con_TF.txt"
     path_relevantes_trec = "relevantes.txt"
     lista_docs = procesar_corpus(path_corpus)
     if(path_stopwords != ''): 
@@ -88,7 +88,7 @@ def start(path_cisi, path_stopwords):
     lista_queries, lista_queries_sin_duplicados = procesar_queries(path_queries, lista_stopwords)
     lista_relevantes = procesar_relevantes(path_relevantes)
     guardar_corpus(path_corpus_trec, lista_docs)
-    guardar_queries(path_queries_con_duplicados_trec, lista_queries)
+    guardar_queries(path_queries_con_TF_trec, lista_queries)
     guardar_queries(path_queries_trec, lista_queries_sin_duplicados)
     guardar_relevantes(path_relevantes_trec, lista_relevantes)
 
